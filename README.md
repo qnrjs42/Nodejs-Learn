@@ -1,4 +1,24 @@
 
+## 프로미스
+
+프로미스: 내용이 실행은 되었지만 결과를 아직 반환하지 않은 객체
+- then 붙이면 결과를 반환
+- 실행이 완료되지 않았으면 완료된 후에 then 내부 함수가 실행
+
+Resolve(성공리턴값) -> then
+Reject(실패리턴값) -> catch
+Finally 부분은 무조건 실행
+
+Promise.all(배열): 여러 개의 프로미스를 동시에 실행
+- 하나라도 실패 시 catch
+- allSettled로 실패한 것만 추려낼 수 있음
+
+
+async/await은 promise 성질을 가지고 있음
+
+async/await은 try/catch로 감싸줘야 함
+
+---
 
 ## 이벤트 루프
 
