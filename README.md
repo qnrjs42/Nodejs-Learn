@@ -1,4 +1,54 @@
 
+
+## 이벤트 루프
+
+호출 스택 -> 백그라운드 -> 태스크 큐 -> 호출 스택
+
+setTimeout()이 0초라도 백그라운드로 이동함
+Promise 백그라운드
+
+우선순위 Promise(1등) - setTimeout(2등)
+
+```javascript
+function oneMore() {
+    console.log('one more');
+}
+function run() {
+    console.log('run run');
+    setTimeout(() => {
+        console.log('wow');
+    }, 0);
+    new Promise((resolve) => {
+        resolve('hi');
+    })
+    .then(console.log);
+    oneMore();
+}
+
+setTimeout(run, 5000);
+
+// 실행 결과
+/*
+    run run
+    one more
+    hi
+    wow
+*/
+```
+
+---
+
+## 호출 스택
+
+밑에서부터 쌓여서 위에서부터 꺼냄
+
+- Anonymous는 가상의 전역 컨텍스트
+- 함수 호출 순서대로 쌓이고, 역순으로 실행
+- 함수 실행 완료 시 스택에서 빠짐
+- LIFO 구조라서 스택이라 불림
+
+---
+
 ## 노드 서버 장단점
 
 장점
@@ -16,6 +66,8 @@
 - 서버 규모가 커졌을 때 서버를 관리하기 어려움
 - 어중간한 성능
 
+---
+
 ## 프로세스 vs 스레드
 
 - 프로세스: 운영체제에서 할당하는 작업의 단위, 프로세스 간 자원 공유 X
@@ -28,6 +80,8 @@
 - 노드는 주로 멀티 스레드 대신 멀티 프로세스 활용
 
 - 노드는 14버전부터 멀티 스레드 사용 가능
+
+---
 
 ## 논블로킹
 

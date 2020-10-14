@@ -1,0 +1,19 @@
+{
+  "name": "Nodejs-Learn",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qnrjs42/Nodejs-Learn.git"
+  },
+  "keywords": [],
+  "author": "qnrjs42",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/qnrjs42/Nodejs-Learn/issues"
+  },
+  "homepage": "https://github.com/qnrjs42/Nodejs-Learn#readme"
+}
