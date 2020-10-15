@@ -1,4 +1,45 @@
 
+## process
+
+
+우선 순위 nextTick(1) - Promise(2) - setTimeout - setImmediate
+
+setTimeout, setImmediate 환경에 따라 누가 먼저 실행될지 결정된다.
+
+
+
+
+```javascript
+setImmediate(() => {
+    console.log('immediate');
+});
+process.nextTick(() => {
+    console.log('nextTick');
+});
+setTimeout(() => {
+    console.log('timeout');
+}, 0);
+Promise.resolve().then(() => console.log('promise'));
+```
+
+```javascript
+// 실행 결과
+
+nextTick
+promise
+timeout
+immediate
+```
+
+
+---
+
+## require
+
+require는 가장 위에 올 필요는 없지만,
+import는 가장 위에 와야함
+
+---
 
 ## 모듈
 
@@ -8,14 +49,12 @@ import - export default (최신 버전)
  module.exports와 export default 똑같이 보이지만 동작이 다를 수 있다.
  대부분은 바뀌는 경우가 있지만 안 바뀌는 경우도 있으니 참고.
 
-
-
 ```javascript
 // module/example1.js
 
 const odd = '홀수';
 const even = '짝수';
-
+ 
 module.exports = { odd, even };
 // export default { odd, even };
 ```
