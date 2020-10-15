@@ -1,12 +1,43 @@
 
-## process
 
+
+
+---
+
+## path
+
+```javascript
+    path.join(__dirname, '/example.js');
+    path.resolve(__dirname, '/example.js');
+```
+
+```
+// 실행결과
+
+c:\users\exam\desktop\node-learn\example.js // join: 상대경로
+c:\example.js // resolve: 절대경로
+```
+
+---
+
+## os
+
+```javascript
+const os = require('os');
+
+console.log(os.cpus());
+```
+
+cpu 정보(클럭, 코어, 스피드 등)를 확인할 수 있다.
+
+
+---
+
+## process
 
 우선 순위 nextTick(1) - Promise(2) - setTimeout - setImmediate
 
 setTimeout, setImmediate 환경에 따라 누가 먼저 실행될지 결정된다.
-
-
 
 
 ```javascript
