@@ -1,4 +1,40 @@
 
+
+## 모듈
+
+require - module.exports
+import - export default (최신 버전)
+
+ module.exports와 export default 똑같이 보이지만 동작이 다를 수 있다.
+ 대부분은 바뀌는 경우가 있지만 안 바뀌는 경우도 있으니 참고.
+
+
+
+```javascript
+// module/example1.js
+
+const odd = '홀수';
+const even = '짝수';
+
+module.exports = { odd, even };
+// export default { odd, even };
+```
+
+```javascript
+// module/example2.js
+
+const value = require('./example1');
+// import { odd, even } from './example1';
+console.log(value.odd, value.even);
+
+// 구조 분해 할당
+const { odd, even } = require('./example1');
+console.log(oddm even);
+```
+
+
+---
+
 ## REPL
 
 Read
