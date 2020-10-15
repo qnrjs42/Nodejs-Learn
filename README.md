@@ -1,4 +1,40 @@
 
+## 프로세스 강제 종료
+
+윈도우: netstat -ano | 포트
+        taskkill /pid 프로세스아이디 /f
+
+맥/리눅스: lsof -i tcp:포트
+           kill -9 프로세스아이디
+
+$ node
+process.pid
+-> 프로세스 아이디
+
+---
+
+## 예외 처리
+
+- 노드 스레드가 멈춤.
+- 노드는 싱글 스레드라 스레드가 멈추면 프로세스가 멈춤.
+
+promise에 catch 항상 작성.
+async/await - try/catch 항상 작성.
+
+에러 처리하면 콘솔에서는 에러 표시를 하지만 서비스는 계속 유지
+
+
+```javascript
+process.on('uncaughtException', (err) => {
+    console.error('예기치 못한 에러', err);
+});
+```
+
+uncaughtException 에러 처리는 에러 내용 기록용으로만 사용.
+
+
+---
+
 ## 스레드풀
 
 fs. crypto, zlib 모듈의 메서드를 실행할 때는 백그라운드에서 동시에 실행
