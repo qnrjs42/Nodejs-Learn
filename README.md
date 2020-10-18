@@ -1,4 +1,14 @@
 
+## 쿠키
+
+키=값의 쌍
+- name=qnrjs42
+- 매 요청마다 서버에 동봉해서 보냄
+- 서버는 쿠키를 읽어 누구인지 파악
+
+
+---
+
 ## REST API
 (Representational State Transfer)
 
@@ -13,6 +23,8 @@ DELETE: 서버 자원을 삭제할 때
 RESTful
 - REST API를 사용한 주소 체계를 이용하는 서버
 
+200: 단순하게 성공
+201: 생성함을 성공
 
 ---
 
