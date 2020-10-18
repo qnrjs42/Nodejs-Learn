@@ -1,5 +1,18 @@
 
-##
+## REST API
+(Representational State Transfer)
+
+/index.html이면 index.html을 보내달라는 뜻
+
+GET: 서버 자원 가져올 때
+POST: 서버 자원을 새로 등록할 때
+PUT: 서버 자원 요청에 들어있는 자원으로 치환하고자할 때 (전체 수정)
+PATCH: 서버 자원 일부만 수정하고자할 때 (부분 수정)
+DELETE: 서버 자원을 삭제할 때
+
+RESTful
+- REST API를 사용한 주소 체계를 이용하는 서버
+
 
 ---
 
