@@ -1,4 +1,37 @@
 
+
+## res 응답
+
+res.end, res.json, res.redirect, res.render, res.send, res.sendFile
+
+위의 응답 함수는 요청당 한 번만 사용한다. 중복 사용 시 에러 출력
+
+
+---
+
+## express 라우터 그룹화
+
+```javascript
+router.get('/about', (req, res) => {
+    res.send('GET, Express');
+});
+router.post('/about', (req, res) => {
+    res.send('POST, Express');
+});
+```
+
+```javascript
+router.route('/about')
+    .get((req, res) => {
+        res.send('GET, Express');
+    })
+    .post((req, res) => {
+        res.send('POST, Express');
+    });
+```
+
+---
+
 ## express multer
 
 - storage: 저장할 공간 정보
