@@ -1,30 +1,29 @@
 const express = require('express');
 const path = require('path');
+const morgan = require('morgan');
+const cookieParser = require('cookie-parser');
 
 const app = express();
 
 app.set('port', process.env.PORT || 3000);
 
-app.use((req, res, next) => {
-    console.log('모든 요청에 실행');
-    next();
-}, (req, res, next) => {
-    try{
-        // console.log('에러 발생');
-        throw new Error('에러 발생');
-    }catch(err) {
-        next(err);
-    }
-});
+app.use(morgan("dev"));
+app.use(cookieParser());
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
 
 app.get('/', (req, res) => {
-    // res.sendFile(path.join(__dirname, "index.html"));
-    res.json({ hello: 'qnrjs42' });
+    res.cookie('name', encodeURIComponent(name), {
+        expires: new Date(),
+        httpOnly: true,
+        path: '/',
+    });
+    res.clearCookie("name", encodeURIComponent(name), {
+      httpOnly: true,
+      path: "/",
+    });
+    res.sendFile(path.join(__dirname, "index.html"));
 });
-
-app.get('/category/:name', (req, res) => {
-    res.send(`hello wildcard`);
-})
 
 app.post("/", (req, res) => {
   res.send("hello express");
@@ -32,6 +31,10 @@ app.post("/", (req, res) => {
 
 app.get("/about", (req, res) => {
   res.send("hello express");
+});
+
+app.get("/category/:name", (req, res) => {
+  res.send(`hello wildcard`);
 });
 
 app.use((req, res, next) => {

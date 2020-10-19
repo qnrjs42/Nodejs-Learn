@@ -1,4 +1,71 @@
 
+## express bodyParser
+
+클라이언트에서 'name'을 보냈을 떄 req.body.name
+
+폼에서 이미지나 파일 보낼 때는 urlencoded가 처리를 못해서 multer라는 모듈을 써야 한다.
+
+```javascript
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+
+app.get('/', (req, res) => {
+    req.body.name
+});
+```
+
+
+---
+
+## cookie-parser
+
+알아서 쿠키를 파싱이 되어 있다.
+
+```javascript
+app.use(cookieParser());
+
+app.get('/', (req, res) => {
+    req.cookies // { mycookei: 'test' }
+
+    // 쿠키 생성
+    res.cookie('name', encodeURIComponent(name), {
+        expires: new Date(),
+        httpOnly: true,
+        path: '/',
+    });
+
+    // 쿠키 삭제
+    res.clearCookie("name", encodeURIComponent(name), {
+      httpOnly: true,
+      path: "/",
+    });
+});
+```
+
+---
+
+## morgan
+
+배포모드에서 에러나면 IP, 정확한 시간, 주소, 브라우저 정보까지 알 수 있다.
+
+```javascript
+// 개발모드
+app.use(morgan('dev'));
+
+// 배포모드
+app.use(morgan('combined'));
+```
+
+---
+
+## express body-parser 최신 사람 구별 방법
+
+express 쓸 때 body-parser 쓰는 사람은 옛날 사람.
+
+안 쓰면 최신 사람.
+
+---
+
 ## express next('route')
 
 next('route')는 같은 라우터에서 실행 되지 않고 다음 라우터로 넘어간다.
