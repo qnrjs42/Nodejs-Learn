@@ -1,4 +1,25 @@
 
+## express next('route')
+
+next('route')는 같은 라우터에서 실행 되지 않고 다음 라우터로 넘어간다.
+
+즉, '실행될까?'는 실행 되지 않고, '실행이 되네?' 라우터로 넘어간다.
+
+```javascript
+app.get('/', (req, res, next) => {
+    res.sendFile(path.join(__dirname, "index.html"));
+    next('route');
+}, (req, res) => {
+    console.log('실행될까?');
+});
+
+app.get('/', (req, res) => {
+    console.log('실행이 되네?');
+})
+```
+
+---
+
 ## express HTTP 상태 코드
 
 기본적으로 res.send()는 200번 코드를 넘겨준다.
@@ -26,6 +47,10 @@ app.use((err, req, res, next) => {
 });
 ```
 
+---
+
+하나의 라우터에서 여러 개의 send나 json이 중첩되면 에러 발생.
+Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are send to the client
 
 ```javascript
 app.post("/", (req, res) => {
@@ -35,8 +60,28 @@ app.post("/", (req, res) => {
 });
 ```
 
-하나의 라우터에서 여러 개의 send나 json이 중첩되면 에러 발생.
-Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are send to the client
+next(err) next()안에 인수가 들어가면 에러로 처리한다.
+
+그래서 에러 처리 미들웨어로 넘어간다.
+
+---
+
+```javascript
+app.use((req, res, next) => {
+    console.log('모든 요청에 실행');
+    next();
+}, (req, res, next) => {
+    try{
+        throw new Error('에러 발생');
+    }catch(err) {
+        next(err);
+    }
+});
+
+app.use((err, req, res, next) => {
+    console.error(err);
+});
+```
 
 ---
 

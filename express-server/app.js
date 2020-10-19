@@ -8,10 +8,18 @@ app.set('port', process.env.PORT || 3000);
 app.use((req, res, next) => {
     console.log('모든 요청에 실행');
     next();
-})
+}, (req, res, next) => {
+    try{
+        // console.log('에러 발생');
+        throw new Error('에러 발생');
+    }catch(err) {
+        next(err);
+    }
+});
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, "index.html"));
+    // res.sendFile(path.join(__dirname, "index.html"));
+    res.json({ hello: 'qnrjs42' });
 });
 
 app.get('/category/:name', (req, res) => {
@@ -32,6 +40,7 @@ app.use((req, res, next) => {
 
 app.use((err, req, res, next) => {
     console.error(err);
+    res.status(200).send('에러 처리 미들웨어')
 });
 
 app.listen(app.get('port'), () => {
