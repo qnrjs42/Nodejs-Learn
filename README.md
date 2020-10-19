@@ -1,4 +1,45 @@
 
+## express HTTP 상태 코드
+
+기본적으로 res.send()는 200번 코드를 넘겨준다.
+
+```javascript
+app.use((req, res, next) => {
+  // res.send('404페이지');
+  res.status(404).send('404페이지');
+});
+```
+
+HTTP 상태 코드만 보고 보안 위협을 할 수 있기 때문에 조심히 써야한다.
+
+200번대 코드만 잘 써줘도 되고, 400번대는 404로 퉁치면 된다.
+
+---
+
+## express 에러 미들웨어
+
+꼭 4개의 매개변수를 써야한다.
+
+```javascript
+app.use((err, req, res, next) => {
+    console.error(err);
+});
+```
+
+
+```javascript
+app.post("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "index.html"));
+    res.send("hello express");
+    res.json({ hello: 'hi' });
+});
+```
+
+하나의 라우터에서 여러 개의 send나 json이 중첩되면 에러 발생.
+Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are send to the client
+
+---
+
 ## express 라우터 매개변수(와일드 카드)
 
 ```javascript
