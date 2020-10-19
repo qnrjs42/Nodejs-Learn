@@ -1,4 +1,24 @@
 
+## express static
+
+css, html, js 정적 파일
+
+localhost:3000/index.html -> localhost:3000/public/index.html
+
+public 폴더 안에 파일이 있어야 함 없으면 next
+
+보안 위협 제거
+
+```javascript
+app.use(morgan("dev"));
+// static은 morgan 밑에 또는 상단에 위치한다.
+app.use(express.static(path.join(__dirname, 'public')));
+```
+
+하지만 서비스에 따라 다르기 때문에 위치 순서를 유도리있게 설정한다.
+
+---
+
 ## express bodyParser
 
 클라이언트에서 'name'을 보냈을 떄 req.body.name
@@ -13,7 +33,6 @@ app.get('/', (req, res) => {
     req.body.name
 });
 ```
-
 
 ---
 
