@@ -1,4 +1,31 @@
 
+## express 라우터 매개변수(와일드 카드)
+
+```javascript
+app.get('/category/:name', (req, res) => {
+    res.send(`hello ${req.params.name}`);
+});
+```
+
+와일드카드는 다른 라우터들보다 아래에 위치
+
+---
+
+## express
+
+app.use()는 모든 요청에서 실행
+
+미들웨어는 next() 해줘야 다음 코드를 실행
+
+```javascript
+app.use((req, res, next) => {
+    console.log('모든 요청에 실행');
+    next();
+});
+```
+
+---
+
 ## SemVer 버저닝
 
 노드 패키지 버전은 SemVer(유의적 버저닝) 방식을 따름
