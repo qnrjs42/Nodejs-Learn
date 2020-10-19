@@ -1,4 +1,78 @@
 
+## express 미들웨어 안에 미들웨어 넣기(미들웨어 확장)
+
+
+```javascript
+app.use('/', (req, res, next) => {
+    if(req.session.id) {
+        // 로그인을 했다면 사진이나 파일을 프론트로 전달 가능
+        express.static(__dirname, 'public')(req, res, next)
+    } else {
+        // 로그인 안 했으면 그냥 넘어감
+        next();
+    }
+});
+```
+
+---
+
+## express 미들웨어간 데이터 전달
+
+app.set하면 서버 켜지는 내내 데이터 공유
+
+잘못된 접근 방법
+```javascript
+app.use((req, res, next) => {
+  app.set('hello', '계좌비밀번호');
+});
+
+app.get("/", (req, res, next) => {
+  app.get('hello');
+});
+```
+
+해결방법
+```javascript
+app.use((req, res, next) => {
+  req.data = '비밀번호';
+});
+
+app.get("/", (req, res, next) => {
+  req.data // 비밀번호
+});
+```
+
+
+---
+
+## express session
+
+- resave: 요청이 왔을 때 세션에 수정사항이 생기지 않아도 다시 저장할지 여부
+- saveUninitialized: 세션에 저장할 내역이 없더라도 세션을 저장할지 여부
+- secret: cookieParser('secretpassword')의 인수와 같게 설정
+- name: 브라우저 - 쿠키 이름 ('coonect.sid' 디폴트 값)
+
+
+req.session.name = 'qnrjs42'; // 세션 등록
+req.sessionID; // 세션 아이디 확인
+req.session.destroy(); // 세션 모두 제거
+
+```javascript
+app.use(session({
+    resave: false,
+    saveUninitialized: false,
+    secret: 'secretpassword',
+    cookie: {
+        httpOnly: true,
+    },
+    name: 'connect.sid',
+}));
+
+
+```
+
+---
+
 ## express static
 
 css, html, js 정적 파일

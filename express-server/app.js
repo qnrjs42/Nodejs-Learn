@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
+const session = require('express-session');
 
 const app = express();
 
@@ -9,20 +10,30 @@ app.set('port', process.env.PORT || 3000);
 
 app.use(morgan("dev"));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(cookieParser());
+app.use(cookieParser("secretpassword"));
+app.use(session({
+    resave: false,
+    saveUninitialized: false,
+    secret: 'secretpassword',
+    cookie: {
+        httpOnly: true,
+    },
+    name: 'connect.sid',
+}));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 app.get('/', (req, res) => {
-    res.cookie('name', encodeURIComponent(name), {
-        expires: new Date(),
-        httpOnly: true,
-        path: '/',
-    });
-    res.clearCookie("name", encodeURIComponent(name), {
-      httpOnly: true,
-      path: "/",
-    });
+    // res.cookie('name', encodeURIComponent(name), {
+    //     expires: new Date(),
+    //     httpOnly: true,
+    //     path: '/',
+    // });
+    // res.clearCookie("name", encodeURIComponent(name), {
+    //   httpOnly: true,
+    //   path: "/",
+    // });
+    req.session.id = 'hello';
     res.sendFile(path.join(__dirname, "index.html"));
 });
 
