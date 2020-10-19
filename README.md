@@ -1,6 +1,56 @@
 
-## express 미들웨어 안에 미들웨어 넣기(미들웨어 확장)
+## express multer
 
+- storage: 저장할 공간 정보
+- diskStorage: 하드디스크에 업로드 파일 저장
+- destination: 저장할 경로
+- filename: 저장할 파일명(파일명+날짜+확장자)
+- Limits: 파일 개수나 파일 사이즈 제한
+
+실제 서버 운영 시 서버 디스크 대신 S3같은 스토리지 서비스에 저장하는게 좋음
+- storage 설정만 바꿔주면 됨
+
+
+```javascript
+const multer = require("multer");
+
+const upload = multer({
+  storage: multer.diskStorage({
+    destination(req, file, done) {
+      done(null, "uploads/");
+    },
+    filename(req, file, done) {
+      const ext = path.extname(file.originalname);
+      done(null, path.basename(file.originalname, ext) + Date.now() + ext);
+    },
+  }),
+  limits: { fileSize: 5 * 1024 * 1024 },
+});
+```
+
+- upload.single(): 하나의 파일 업로드할 때
+- upload.none(): 파일은 업로드 하지 않을 때
+- upload.array(): 여러 개 파일 업로드할 때
+- req.file: 업로드 정보 저장
+
+```javascript
+app.post("/upload", upload.single("image"), (req, res) => {
+  console.log(req.file);
+  res.send("ok");
+});
+app.post("/upload", upload.none(), (req, res) => {
+  console.log(req.body);
+  res.send("ok");
+});
+app.post("/upload", upload.array('many'), (req, res) => {
+  console.log(req.files, req.body);
+  res.send("ok");
+});
+```
+
+---
+
+## express 미들웨어 안에 미들웨어 넣기(미들웨어 확장)
 
 ```javascript
 app.use('/', (req, res, next) => {
