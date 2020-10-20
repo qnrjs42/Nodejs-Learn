@@ -1,4 +1,155 @@
 
+## 시퀄라이즈 쿼리
+
+### 생성
+```SQL
+-- SQL
+INSERT INTO nodejs.users (name, age, married, comment) VALUES ('zero', 24, 0, '자기소개1');
+```
+```javascript
+// javascript
+const { User } = require('../models');
+User.create({
+    name: 'zero',
+    age: 24,
+    married: false,
+    comment: '자기소개1',
+});
+```
+
+### 조회
+```SQL
+-- SQL
+SELECT * FROM nodejs.users;
+```
+```javascript
+// javascript
+User.findAll({});
+```
+
+```SQL
+-- SQL
+SELECT name, married FROM nodejs.users; 
+```
+```javascript
+// javascript
+User.findAll({
+    attributes: ['name', 'married'],
+});
+```
+
+### 조회 조건
+```SQL
+-- SQL
+SELECT name, age FROM nodejs.users WHERE married = 1 AND age > 30;
+```
+```javascript
+// javascript
+const { Op } = require('sequelize');
+const { User } = require('../models');
+User.findAll({
+    attributes: ['name', 'age'],
+    where: {
+        married: 1,
+        age: { [Op.gt]: 30 },
+    },
+});
+```
+
+```SQL
+-- SQL
+SELECT id, name FROM nodejs.users WHERE married = 0 OR age > 30;
+```
+```javascript
+// javascript
+const { Op } = require('sequelize');
+const { User } = require('../models');
+User.findAll({
+    attributes: ['id', 'name'],
+    where: {
+        [Op.or]: [
+            { married: 0 }, 
+            { age: { [Op.gt]: 30 }}
+        ],
+    },
+});
+```
+
+gt: <, lt: >, gte: >=, lte: <=
+
+### 조회 ORDER BY
+```SQL
+-- SQL
+SELECT id, name FROM nodejs.users ORDER BY age DESC;
+```
+```javascript
+// javascript
+const { User } = require('../models');
+User.findAll({
+    attributes: ['id', 'name'],
+    order: [['age', 'DESC']],
+});
+```
+
+```SQL
+-- SQL
+SELECT id, name FROM nodejs.users ORDER BY age DESC LIMIT 1;
+```
+```javascript
+// javascript
+const { User } = require('../models');
+User.findAll({
+    attributes: ['id', 'name'],
+    order: [['age', 'DESC']],
+    limit: 1,
+});
+```
+
+```SQL
+-- SQL
+SELECT id, name FROM nodejs.users ORDER BY age DESC LIMIT 1 OFFSET 1;
+```
+```javascript
+// javascript
+const { User } = require('../models');
+User.findAll({
+    attributes: ['id', 'name'],
+    order: ['age', 'DESC'],
+    limit: 1,
+    offset: 1,
+});
+```
+
+### 수정
+```SQL
+-- SQL
+UPDATE nodejs.users SET comment = '바꿀 내용' WHERE id = 2;
+```
+```javascript
+// javascript
+const { User } = require('../models');
+User.update({
+    comment: '바꿀 내용',
+}, {
+    where: { id: 2 }
+});
+```
+
+### 삭제
+```SQL
+-- SQL
+DELETE FROM nodejs.users WHERE id = 2;
+```
+```javascript
+// javascript
+const { User } = require('../models');
+User.destory({
+    where: { id: 2 },
+});
+```
+
+---
+
 ## 시퀄라이즈 테이블 관계
 
 user 모델과 comments 모델 간의 관계 정의
