@@ -1,4 +1,20 @@
 
+## 시퀄라이즈
+
+MySQL 작업을 쉽게 할 수 있도록 도와주는 라이브러리
+- ORM : Object Relational Mapping: 객체와 데이터를 매핑(1대1 짝지음)
+- MySQL 이외에도 다른 RDB(Maria, Postgre, SQLite, MSSQL)와도 호환 가능
+- 자바스크립트 문법으로 데이터베이스 조작 가능
+
+```javascript
+npm i express morgan nunjucks sequelize sequelize--cli mysql2
+npm i -D nodemon
+
+npx sequelize init
+```
+
+---
+
 ## MySQL CRUD
 
 Create<br/>
