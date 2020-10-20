@@ -1,4 +1,48 @@
 
+## 시퀄라이즈 실습
+
+
+```javascript
+// routes/comments.js
+
+/*
+    req.body 구성
+    {
+        id: "2",
+        comment: "123123"
+    }
+*/
+
+const comment = await Comment.create({
+    commenter: req.body.id,
+    comment: req.body.comment,
+});
+```
+
+```
+Executing (default): INSERT INTO `comments` (`id`,`comment`,`created_at`,`commenter`) VALUES (DEFAULT,?,?,?);
+```
+(DEFAULT,?,?,?): ?는 사용자 입력 부분으로, 보안 위협을 제거함으로써 ?으로 대체된다.
+
+---
+
+
+## 시퀄라이즈로 데이터베이스 생성(콘솔)
+
+```
+npx sequelize db:create
+```
+
+위의 명령어를 입력할 경우 config/config.json 파일보고 데이터베이스를 생성한다.
+
+---
+
+테이블을 지울 때 참조관계가 있을 경우
+
+belongsTo가 있는 테이블부터 지운다.
+
+---
+
 ## 시퀄라이즈 쿼리
 
 ### 생성
