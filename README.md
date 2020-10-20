@@ -1,6 +1,26 @@
 
+## MySQL 외래키 (foregin key)
+
+댓글 테이블은 사용자 테이블과 관계가 있다(사용자가 댓글을 달기 때문)
+- 외래키를 두어 두 테이블이 관계가 있다는 것을 표시
+
+FOREIGN KEY (컬럼명)  REFERENCES 데이터베이스명.테이블명 (컬럼)
+FOREIGN KEY (commenter) REFERENCES nodejs.users (id)
+- 댓글 테이블에는 commenter 컬럼이 생기고 사용자 테이블의 id값이 저장됨
+- commenter 컬럼이 users 테이블의 id 컬럼을 참조해서 그 컬럼이 값이 있어야만 등록할 수 있음
+
+ON DELETE CASCADE, ON UPDATE CASCADE
+- 사용자 테이블의 row가 지워지고 수정될 때 댓글 테이블의 연관된 row들도 같이 지워지고 수정됨
+- 데이터를 일치시키기 위해 사용하는 옵션 (CASCADE 대신 SET NULL과 NO ACTION도 있음)
+- CASCADE: 만약 id가 1번인 사용자가 탈퇴 시에 그 사람이 쓴 댓글 까지 지움
+- SET NULL: 만약 id가 1번인 사용자가 탈퇴 시에 그 사람 댓글은 남겨두고 commenter만 NULL
+- NO ACTION: 만약 id가 1번인 사용자가 탈퇴 시에 그냥 그대로 둠(작성자, 댓글 유지)
+
+---
+
 ## MySQL 테이블 생성
 
+users 테이블 생성
 ```SQL
 mysql> CREATE TABLE nodejs.users (
     -> id INT NOT NULL AUTO_INCREMENT,
@@ -16,21 +36,7 @@ mysql> CREATE TABLE nodejs.users (
     -> ENGINE = InnoDB;
 ```
 
-CREATE TABLE [데이터베이스명.테이블명]
-
-INT: 정수 자료형(FLOAT, DOUBLE은 실수)
-VARCHAR: 문자열 자료형, 가변 길이(CHAR은 고정 길이)
-TEXT: 긴 문자열
-DATETIME: 날짜 자료형
-TINYINT: -128 ~ 127까지 저장하지만 여기서는 1 또는 0만 저장하는 Bool 값
-
-NOT_NULL: 빈 값은 받지 않음(NULL은 빈 값 허용)
-AUTO_INCREMENT: 숫자 자료형인 경우 다음 row가 저장될 때 자동으로 1 증가
-UNSIGNED: 0과 양수만 허용
-ZEROFILL: 숫자의 자리 수가 고정된 경우 빈 자리에 0을 넣음
-DEFAULT now(): 날짜 컬럼의 기본 값을 현재 시간으로
-
-
+comments 테이블 생성
 ```SQL
 mysql> CREATE TABLE nodejs.comments (
     -> id INT NOT NULL AUTO_INCREMENT,
@@ -49,10 +55,32 @@ mysql> CREATE TABLE nodejs.comments (
     -> ENGINE = InnoDB;
 ```
 
-VARCHAR(100): 100글자 이하
-DATE: 날짜 기록
-DATETIME: 날짜 + 시간 기록
+테이블 제대로 생성 됐는지 확인
+```SQL
+mysql> SHOW TABLES;
+mysql> DESC users;
+mysql> DESC comments;
+```
 
+CREATE TABLE [데이터베이스명.테이블명]
+
+INT: 정수 자료형(FLOAT, DOUBLE은 실수)
+VARCHAR: 문자열 자료형, 가변 길이(CHAR은 고정 길이)
+TEXT: 긴 문자열
+DATETIME: 날짜 자료형
+TINYINT: -128 ~ 127까지 저장하지만 여기서는 1 또는 0만 저장하는 Bool 값
+
+NOT_NULL: 빈 값은 받지 않음(NULL은 빈 값 허용)
+AUTO_INCREMENT: 숫자 자료형인 경우 다음 row가 저장될 때 자동으로 1 증가
+UNSIGNED: 0과 양수만 허용
+ZEROFILL: 숫자의 자리 수가 고정된 경우 빈 자리에 0을 넣음
+DEFAULT now(): 날짜 컬럼의 기본 값을 현재 시간으로
+
+UNIQUE INDEX name_UNIQUE (name ASC): name을 고유값으로 지정하고 자주 검색하니 INDEX 키워드 붙힘
+
+PRIMARY KEY(id) : id를 기본 값으로 지정 (겹치지 않는 데이터)
+INDEX commenter_idx (commenter ASC): 자주 검색되는 데이터 지정하면 검색 속도가 빨라짐 (오름차순)
+CONSTRAINT comment: comment에 제약을 걸음
 
 ---
 
