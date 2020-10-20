@@ -1,4 +1,64 @@
 
+## 시퀄라이즈 테이블 관계
+
+user 모델과 comments 모델 간의 관계 정의
+- 1:N 관계 (사용자 한 명이 댓글 여러 개 작성)
+- 시퀄라이즈에서는 1:N 관계를 hanMany (사용자.hasMany(댓글))
+- 반대의 입장에서는 belongsTo(댓글.belongsTo(사용자))
+- belongsTo가 있는 테이블에 컬럼이 생김(댓글 테이블에 commenter 컬럼)
+
+### 1:N 관계
+
+```javascript
+static associate(db) {
+    db.User.hasMany(db.Comment, { foreignKey: "commenter", sourceKey: "id" });
+}
+```
+
+User.hasMany : User 모델은 많이 갖고 있다. 라고 해석
+foreignKey(남의 컬럼), sourceKey(나의 컬럼)
+Comment 모델의 commenter라는 컬럼이 User의 id를 참조하고 있다.
+
+
+```javascript
+static associate(db) {
+    db.Comment.belongsTo(db.User, { foreignKey: "commenter", targetKey: "id" });
+}
+```
+
+Comment.belongsTo : Comment 모델은 속해 있다. 라고 해석
+foreignKey(나의 컬럼), targetKey(남의 컬럼)
+
+
+### 1:1 관계
+
+```javascript
+db.User.hasOne(db.Info, { foreignKey: "UserId", sourceKey: "id" });
+db.Info.belongsTo(db.User, { foreignKey: "UserId", targetKey: "id" });
+```
+
+1:1 관계는 하나의 테이블에서 두 개 이상 테이블로 쪼갰을 때 사용한다.
+
+1:1 관계일 때 누가 hasOne이고 belongsTo인지는 스스로 정해줘야 한다.
+foreignKey를 누가 갖고 있는지에 따라.
+위에 문법에서는 Info가 UserId컬럼을 갖고 있다.
+
+
+### 다:다 관계
+
+```javascript
+db.Post.belongsToMany(db.Hashtag, { through: 'PostHashtag' });
+db.Hashtag.belongsToMany(db.Post, { through: 'PostHashtag' });
+```
+
+예) 게시글과 해시태그 테이블
+하나의 게시글이 여러 개의 해시태그를 가질 수 있고 하나의 해시태그가 여러 개의 게시글을 가질 수 있음
+
+DB 특성상 다:다 관계는 중간 테이블이 생긴다.
+
+
+---
+
 ## 시퀄라이즈 모델
 
 ```javascript
