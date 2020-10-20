@@ -1,4 +1,60 @@
 
+## MySQL CRUD
+
+Create<br/>
+Read<br/>
+Update<br/>
+Delete<br/>
+
+INSERT INTO 테이블 (컬럼명들) VALUES (값들)
+```SQL
+mysql> INSERT INTO nodejs.users (name, age, married, comment) VALUES ('zero', 24, 0, '자기소개1');
+mysql> INSERT INTO nodejs.users (name, age, married, comment) VALUES ('nero', 32, 1, '자기소개2');
+
+mysql> INSERT INTO nodejs.comments (commenter, comment) VALUES (1, '안녕하세요 zero의 댓글입니다.');
+```
+
+
+SELECT 컬럼 FROM 테이블명
+```SQL
+mysql> SELECT * FROM nodejs.users;
+
+mysql> SELECT name, married FROM nodejs.users;
+
+mysql> SELECT name, married FROM nodejs.users WHERE married = 1 AND age > 30;
+
+mysql> SELECT id, name FROM nodejs.users WHERE married = 0 OR age > 30;
+```
+
+
+ORDER BY
+- DESC 내림차순, ASC 오름차순
+```SQL
+mysql> SELECT id, name FROM nodejs.users ORDER BY age DESC;
+```
+
+LIMIT | 조회할 개수 제한
+```SQL
+mysql> SELECT id, name FROM nodejs.users ORDER BY age DESC LIMIT 1;
+```
+
+OFFSET | 앞의 row들 스킵 가능(0부터 셈)
+```SQL
+mysql> SELECT id, name FROM nodejs.users ORDER BY age DESC LIMIT 1 OFFSET 1;
+```
+
+UPDATE 테이블명 SET 컬럼=새 값 WHERE 조건
+```SQL
+mysql> UPDATE nodejs. users SET comment = '바꿀 내용' WHERE id = 2;
+```
+
+DELETE FROM 테이블명 WHERE 조건
+```SQL
+mysql> DELETE FROM nodejs.users WHERE id = 2;
+```
+
+---
+
 ## MySQL 외래키 (foregin key)
 
 댓글 테이블은 사용자 테이블과 관계가 있다(사용자가 댓글을 달기 때문)
