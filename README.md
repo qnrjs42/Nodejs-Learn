@@ -1,4 +1,53 @@
 
+## 시퀄라이즈 모델
+
+```javascript
+module.exports = class User extends Sequelize.Model {
+    ...
+```
+
+User는 MySQL의 테이블명과 같다.
+
+시퀄라이즈에서는 id가 자동으로 AUTO_INCREMENT 해준다.
+
+
+```javscript
+type: Sequelize.DATE
+```
+
+MySQL DATETIME -> Sequelize.DATE
+MySQL DATE -> Sequelize.DATEONLY
+
+
+```javascript
+{
+    sequelize,
+    timestamps: false,
+    underscored: false,
+    paranoid: false,
+    modelName: "User",
+    tableName: "users",
+    charset: "utf8",
+    collate: "utf8_general_ci",
+}
+```
+
+시퀄라이즈에서는 기본적으로 2개 더 넣어준다.
+timestamps: false일 경우 createdAt, updatedAt을 넣어준다.
+createdAt: 생성할 때 현재 시간
+updatedAt: 수정할 때 현재 시간
+timestamps: true면 createdAt, updatedAt 자동으로 현재 시간을 맞춰준다.
+
+underscored: true일 경우 created_at, updated_at (취향차이, 스네이크케이스, 카멜케이스)
+
+paranoid: true일 경우 deletedAt 자동으로 생성 (회원정보 3년 5년 저장하는 중간에 복구하기 위해)
+
+modelName: "User" 시퀄라이즈는 모델명을 소문자와 복수형으로하여 테이블명을 만듦 (User -> users, Bird -> birds, Post -> posts)
+
+charset: "utf8mb4"는 이모티콘까지 사용할 수 있음
+
+---
+
 ## 시퀄라이즈
 
 MySQL 작업을 쉽게 할 수 있도록 도와주는 라이브러리
