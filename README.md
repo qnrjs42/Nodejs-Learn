@@ -1,4 +1,74 @@
 
+## MySQL 테이블 생성
+
+```SQL
+mysql> CREATE TABLE nodejs.users (
+    -> id INT NOT NULL AUTO_INCREMENT,
+    -> name VARCHAR(20) NOT NULL,
+    -> age INT UNSIGNED NOT NULL,
+    -> married TINYINT NOT NULL,
+    -> comment TEXT NULL,
+    -> created_at DATETIME NOT NULL DEFAULT now(),
+    -> PRIMARY KEY(id),
+    -> UNIQUE INDEX name_UNIQUE (name ASC))
+    -> COMMENT = '사용자 정보'
+    -> DEFAULT CHARACTER SET = utf8
+    -> ENGINE = InnoDB;
+```
+
+CREATE TABLE [데이터베이스명.테이블명]
+
+INT: 정수 자료형(FLOAT, DOUBLE은 실수)
+VARCHAR: 문자열 자료형, 가변 길이(CHAR은 고정 길이)
+TEXT: 긴 문자열
+DATETIME: 날짜 자료형
+TINYINT: -128 ~ 127까지 저장하지만 여기서는 1 또는 0만 저장하는 Bool 값
+
+NOT_NULL: 빈 값은 받지 않음(NULL은 빈 값 허용)
+AUTO_INCREMENT: 숫자 자료형인 경우 다음 row가 저장될 때 자동으로 1 증가
+UNSIGNED: 0과 양수만 허용
+ZEROFILL: 숫자의 자리 수가 고정된 경우 빈 자리에 0을 넣음
+DEFAULT now(): 날짜 컬럼의 기본 값을 현재 시간으로
+
+
+```SQL
+mysql> CREATE TABLE nodejs.comments (
+    -> id INT NOT NULL AUTO_INCREMENT,
+    -> commenter INT NOT NULL,
+    -> comment VARCHAR(100) NOT NULL,
+    -> created_at DATETIME NOT NULL DEFAULT now(),
+    -> PRIMARY KEY(id),
+    -> INDEX commenter_idx (commenter ASC),
+    -> CONSTRAINT comment
+    -> FOREIGN KEY (commenter)
+    -> REFERENCES nodejs.users (id)
+    -> ON DELETE CASCADE
+    -> ON UPDATE CASCADE)
+    -> COMMENT = '댓글'
+    -> DEFAULT CHARSET = utf8mb4
+    -> ENGINE = InnoDB;
+```
+
+VARCHAR(100): 100글자 이하
+DATE: 날짜 기록
+DATETIME: 날짜 + 시간 기록
+
+
+---
+
+## MySQL 데이터베이스 생성
+
+```SQL
+mysql> CREATE SCHEMA `nodejs` DEFAULT CHARACTER SET utf8;
+```
+-> nodejs 데이터베이스 생성
+```SQL
+mysql> use nodejs;
+```
+-> nodejs 데이터베이스 선택
+
+---
+
 ## 데이터베이스
 
 서버에 모든 데이터를 저장하면 비용이 많이 들기 때문에
