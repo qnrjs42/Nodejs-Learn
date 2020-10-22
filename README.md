@@ -1,4 +1,77 @@
 
+## 시퀄라이즈 - 데이터베이스 연결 팁
+
+```javascript
+sequelize.sync({ force: false })
+.then(() => {
+    console.log('데이터베이스 연결 성공');
+})
+.catch((err) => {
+    console.error(err);
+});
+```
+
+force: true일 경우 연결할 때마다 테이블을 지웠다가 재생성하므로 데이터가 날라간다.
+실무에서는 절대로 true하면 안 된다.
+
+alter: true일 경우 데이터는 유지하고 컬럼을 바뀌긴 하지만 가끔가다 컬럼과 데이터가 맞지 않아 에러가 발생할 수 있다.
+
+
+테이블이 생성되지 않는 경우 model에 오타가 있을 확률이 있다.
+force: true로 하여 지우는데 foreignKey가 참조되어 제대로 지워지지 않는 경우가 있으므로
+MySQL Workbench에서 지운다.
+
+---
+
+## 시퀄라이즈 같은 테이블 다:다 관계
+
+```javascript
+db.User.belongsToMany(db.User, {
+    foreignKey: 'followingId',
+    as: 'Followers',
+    through: 'Follow',
+});
+db.User.belongsToMany(db.User, {
+    foreignKey: 'followerId',
+    as: 'Followings',
+    through: 'Follow',
+});
+```
+
+팔로잉, 팔로워
+
+foreignKey: 외래키
+as: 컬럼에 대한 별명
+through: 중간 테이블명
+
+
+다:다 관계 이므로 중간 테이블 through: 'Follow'
+
+foreignKey를 안 넣어주면 기본적으로 UserId가 참조된다.
+
+UserId면 누가 followingId이고, followerId인지 구별할 수 없다.
+
+팔로워: 나를 팔로우 하는 사람들
+팔로잉: 내가 팔로우 하는 사람들
+
+followerId  |   followingId
+    1       |       3
+    4       |       3
+    5       |       3
+    2       |       1
+    1       |       2
+    4       |       1
+
+foreignKey: 'followingId', as: 'Followers'<br/>
+그 사람의 팔로워들을 가져오려할 때<br/>
+-> 3번을 검색하여 팔로워들을 찾음
+
+foreignKey: 'followerId', as: 'Followings',<br/>
+팔로잉들을 가져오려할 때<br/>
+-> 1번을 검색하여 팔로잉들을 찾음
+
+---
+
 ## 시퀄라이즈 데이터베이스 생성 시 주의사항
 
 1. npx sequelize init
