@@ -1,4 +1,29 @@
 
+## 시퀄라이즈 데이터베이스 생성 시 주의사항
+
+1. npx sequelize init
+
+```javascript
+// config/config.json
+
+"development": {
+    "username": "root",
+    "password": "1234",
+    "database": "nodejsbook-nodebird",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+},
+
+```
+
+username, password, database까지 지정해주고 저장까지 마무리 한 다음 2번을 진행한다.
+
+2. npx sequelize db:create
+
+MySQL Workbench를 가보면 nodejsbook-nodebird 스키마가 생성된 것을 볼 수 있다.
+
+---
+
 ```javascript
 const dotenv = require('dotenv');
 
@@ -39,7 +64,6 @@ JOIN: 관계가 있는 테이블끼리 데이터를 합치는 기능
 ---
 
 ## 시퀄라이즈 실습
-
 
 ```javascript
 // routes/comments.js
@@ -1077,7 +1101,6 @@ console.log(os.cpus());
 ```
 
 cpu 정보(클럭, 코어, 스피드 등)를 확인할 수 있다.
-
 
 ---
 
