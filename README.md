@@ -1,4 +1,33 @@
 
+
+## 로그인 미들웨어
+
+```javascript
+// routes/middlewares
+
+exports.isLoggedIn = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    next();
+  } else {
+    res.status(403).send('로그인 필요');
+  }
+};
+
+exports.isNotLoggedIn = (req, res, next) => {
+  if (!req.isAuthenticated()) {
+    next();
+  } else {
+    const message = encodeURIComponent('로그인한 상태입니다.');
+    res.redirect(`/?error=${message}`);
+  }
+};
+```
+
+isLoggedIn: 로그인 했으면 통과
+isNotLoggedIn: 로그인 하지 않았으면 통과
+
+---
+
 ## passport
 
 ```javascript
@@ -10,7 +39,7 @@ npm i passport passport-local bcrypt passport-kakao
 - 2. routes/auth/login - passport.authenticate('local') 호출
 - 3. passport/localStrategy 이동
 - 4. 입력한 이메일이 DB에 있는지 조회, 있으면 입력한 패스워드와 DB 패스워드를 bcrypt로 비교
-- 5. 성공 시 유저 정보, 실패 시 에러 메시지
+- 5. 성공 시 유저 정보 리턴, 실패 시 에러 메시지 리턴
 - 6. 다시 routes/auth/login - passport.authenticate() 서버 에러 있으면 출력 없으면 넘어감
 - 7. 로그인 실패 시 에러 메시지와 함께 프론트로 전송. 성공 시 req.login(user, ) 호출
 - 8. passport/index - passport.serializeUser() 실행. 메서드 호출 시 넘겨준 user의 id만 서버 세션에 저장
@@ -42,10 +71,13 @@ done(error);
 
 
 로그인 이후 과정
-- 1. 모든 요청에 passport.session() 미들웨어가 passport.deserializeUser 메서드 호출
+- 1. 모든 요청에 app.js - passport.session() 미들웨어가 passport.deserializeUser 메서드 호출<br/>
+connect.sid로 id 유추하여 passport.deserializeUser((id,))를 넘겨줌
 - 2. req.session에 저장된 아이디로 데이터베이스에서 사용자 조회
 - 3. 조회된 사용자 정보를 req.user에 저장
 - 4. 라우터에서 req.user 객체 사용 가능
+
+
 
 ---
 

@@ -5,6 +5,7 @@ const path = require('path');
 const session = require('express-session');
 const nunjucks = require('nunjucks');
 const dotenv = require('dotenv');
+const passport =  require('passport');
 
 dotenv.config();
 const pageRouter = require('./routes/page');
@@ -40,6 +41,9 @@ app.use(session({
     secure: false,
   },
 }));
+// express session보다 아래에 위치해야 함
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/', pageRouter);
 app.use('/auth', authRouter);

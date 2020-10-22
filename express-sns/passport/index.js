@@ -10,6 +10,7 @@ module.exports = () => {
     // done()이 되면 routes/auth/login에서 (loginError) => { 으로 넘어감
   });
 
+  // 예) { id: 3, 'connect.sid': 48646465213546 }
 
   // req.session에 저장된 사용자 아이디 바탕으로 DB 조회로 사용자 정보 얻어낸 후 req.user에 저장
   passport.deserializeUser((id, done) => {
