@@ -1,4 +1,30 @@
 
+## 카카오 로그인
+
+https://developers.kakao.com/
+
+1. 로그인
+2. 내 애플리케이션 - 애플리케이션 추가하기
+3. 앱 설정 탭 - 플랫폼 - Web - 플랫폼 등록 - http://localhost:8001 등록
+4. 제품 설명 탭 - 활성화 설정 - 상태 On 
+5. 제품 설명 탭 - Redirect URI - Redirect URI 등록 - http://localhost:8001/auth/kakao/callback
+6. 제품 설명 탭 - 동의 항목 - 개인정보 보호항목 - 프로필 정보, 카카오계정 등등 필요한 정보 동의
+7. 앱 설정 탭 - 앱 키 - REST API 키 복사
+8. .env - KAKAO_ID=RES API 붙여넣기 (예: KAKAO_ID=123456789ABC)
+
+### 로그인 과정
+- 1. 로그인 요청
+- 2. routes/auth/kakao - router.get('/kakao', passport.authenticate('kakao')); 호출
+- 3. 카카오 로그인 페이지로 이동
+- 4. 카카오가 콜백 받아서 routes/auth/login - router.get('/kakao/callback', passport.authenticate('kakao', 호출
+- 5. passport/kakaoStrategy 이동
+- 6. 카카오에서 보내준 profile으로 DB에 카카오로 등록된 id가 있는지 조회
+- 7. 성공 시 유저 정보 리턴, 실패 시 회원 가입 및 로그인 하여 유저 정보 리턴
+- 9. passport/index - passport.serializeUser() 실행. 메서드 호출 시 넘겨준 user의 id만 서버 세션에 저장
+- 10. 다시 routes/auth/login - req.login() 에러 있으면 출력 없으면 넘어감
+- 11. 세션 쿠키 브라우저로 넘겨주면서 메인 페이지로 이동하여 로그인 성공
+
+---
 
 ## 로그인 미들웨어
 
@@ -34,7 +60,21 @@ isNotLoggedIn: 로그인 하지 않았으면 통과
 npm i passport passport-local bcrypt passport-kakao
 ```
 
-로그인 과정
+```javascript
+// app.js
+const passportConfig = require('./passport');
+sequelize.sync({ force: false })
+.then(() => {
+    console.log('데이터베이스 연결 성공');
+})
+.catch((err) => {
+    console.error(err);
+});
+// sequelize 밑에다가 함수 실행
+passportConfig();
+```
+
+### 로그인 과정
 - 1. 로그인 요청
 - 2. routes/auth/login - passport.authenticate('local') 호출
 - 3. passport/localStrategy 이동
@@ -70,14 +110,12 @@ done(error);
 - authError: done(error);
 
 
-로그인 이후 과정
+### 로그인 이후 과정
 - 1. 모든 요청에 app.js - passport.session() 미들웨어가 passport.deserializeUser 메서드 호출<br/>
 connect.sid로 id 유추하여 passport.deserializeUser((id,))를 넘겨줌
 - 2. req.session에 저장된 아이디로 데이터베이스에서 사용자 조회
 - 3. 조회된 사용자 정보를 req.user에 저장
 - 4. 라우터에서 req.user 객체 사용 가능
-
-
 
 ---
 

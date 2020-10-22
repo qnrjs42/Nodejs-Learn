@@ -1,3 +1,21 @@
+
+```javascript
+const dotenv = require('dotenv');
+
+dotenv.config();
+```
+
+dotenv는 최대한 최상단에 위치하는게 좋다.
+
+```javascript
+process.env.NODE_ENV !== 'production' ? err : {};
+```
+
+---
+
+개발 모드일 경우 에러 상세 정보까지 출력하고,
+배포 모드일 경우 에러 출력 안 함
+
 ## SemVer 버저닝
 
 노드 패키지 버전은 SemVer(유의적 버저닝) 방식을 따름
