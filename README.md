@@ -1,4 +1,43 @@
 
+```javascript
+const dotenv = require('dotenv');
+
+dotenv.config();
+```
+
+dotenv는 최대한 최상단에 위치하는게 좋다.
+
+```javascript
+process.env.NODE_ENV !== 'production' ? err : {};
+```
+
+개발 모드일 경우 에러 상세 정보까지 출력하고,
+배포 모드일 경우 에러 출력 안 함
+
+---
+
+## NoSQL
+
+MySQL같은 SQL 데이터베이스와는 다른 유형의 데이터
+NoSQL의 대표주자인 mongoDB(몽고디비) 사용
+
+SQL(MySQL)
+- 규칙에 맞는 데이터 입력
+- 테이블 간 JOIN 지원
+- 안전성, 일관성
+- 용어(테이블, ROW, COLUMN)
+
+NoSQL(mongoDB)
+- 자유로운 데이터 입력
+- 컬렉션 간 JOIN 미지원
+- 확장성, 가용성
+- 용어(컬렉션, 다큐먼트, 필드)
+
+JOIN: 관계가 있는 테이블끼리 데이터를 합치는 기능
+빅데이터, 메시징(로그), 세션 관리 등(비정형 데이터)에는 mongoDB 사용하면 좋음
+
+---
+
 ## 시퀄라이즈 실습
 
 
