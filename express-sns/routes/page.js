@@ -1,6 +1,6 @@
 const express = require('express');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
-const { Post, User } = require('../models');
+const { Post, User, Hashtag } = require('../models');
 
 const router = express.Router();
 
@@ -38,6 +38,31 @@ router.get('/', async (req, res, next) => {
   } catch (err) {
     console.error(err);
     next(err);
+  }
+});
+
+// GET /hashtag?hashtag=노드
+router.get('/hashtag', async (req, res, next) => {
+  const query = decodeURIComponent(req.query.hashtag);
+  if (!query) {
+    return res.redirect('/');
+  }
+  try {
+    // 해시태그 존재하는지 조회
+    const hashtag = await Hashtag.findOne({ where: { title: query } });
+    let posts = [];
+    if (hashtag) {
+      // 해시태그 있으면 게시글의 작성자(id, nick만)까지 가져옴
+      posts = await hashtag.getPosts({ include: [{ model: User, attributes: ['id', 'nick'] }] });
+    }
+
+    return res.render('main', {
+      title: `${query} 검색 결과 | NodeBird`,
+      twits: posts,
+    });
+  } catch (error) {
+    console.error(error);
+    return next(error);
   }
 });
 
