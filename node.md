@@ -1,4 +1,72 @@
 
+## multer
+
+form 태그의 enctype이 multipart/form-data
+- body-parser로는 요청 본문을 해석할 수 없다.
+
+```html
+<form id="twit-form" action="/post" method="post" enctype="multipart/form-data">...</form>
+```
+
+multer
+- multer로 multipart/form-data 해석할 수 있다.
+- 이미지를 먼저 업로드하고, 이미지가 저장된 경로를 반환
+- 게시글 form을 submit할 때는 이미지 자체 대신 경로를 전송
+
+```javascript
+// app.js
+
+app.use('/img', express.static(path.join(__dirname, 'uploads')));
+```
+
+```javascript
+// routes/post
+
+const upload = multer({
+  storage: multer.diskStorage({
+    destination(req, file, cb) {
+      cb(null, 'uploads/'); // uploads 폴더에 저장
+    },
+    filename(req, file, cb) {
+      const ext = path.extname(file.originalname);
+      cb(null, path.basename(file.originalname, ext) + Date.now() + ext); // 파일명 + 현재 날짜 + 확장자
+    },
+  }),
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+});
+
+// upload.single('img') | 요청 본문의 img에 담긴 이미지 하나를 읽어 설정대로 저장하는 미들웨어
+router.post('/img', isLoggedIn, upload.single('img'), (req, res) => {
+    // 저장된 파일에 대한 정보는 req.file 객체에 담김
+  console.log(req.file);
+  // 정보를 프론트로 넘겨줌
+  res.json({ url: `/img/${req.file.filename}` });
+});
+
+router.post('/', isLoggedIn, upload.none(), async (req, res, next) => {
+  try {
+    const post = await Post.create({
+      content: req.body.content,
+      img: req.body.url,
+      UserId: req.user.id,
+    });
+    
+    res.redirect('/');
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+```
+
+
+이미지와 게시글 요청을 따로 받는 이유<br/>
+이미지 크기가 클 경우 서버가 압축하는데 시간이 소요되므로 그 시간동안 글 작성하면 효율적<br/>
+이미지 먼저 올리고 글 작성하는 경우: 이미지 업로드(10초) + 글 작성(10초) = 게시글 바로 업로드<br/>
+글 작성하고 이미지 업로드하는 경우: 글 작성(10초) + 이미지 업로드(10초) = 이미지 압축 끝날 때 까지 기다리고 업로드<br/>
+
+---
+
 ```javascript
 const dotenv = require('dotenv');
 

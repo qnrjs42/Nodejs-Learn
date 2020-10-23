@@ -1,3 +1,27 @@
+## express 모든 라우터 요청에 공통 변수
+
+```javascript
+// routes/page
+
+router.use((req, res, next) => {
+  // /page/ 요청에 모두 req.user가 들어가있음
+  res.locals.user = req.user;
+  next();
+});
+
+router.get('/profile', (req, res) => {
+    req.user;
+});
+router.get('/join', (req, res) => {
+    req.user;
+});
+router.get('/', async (req, res, next) => {
+    req.user;
+});
+```
+
+---
+
 ## express res 응답
 
 res.end, res.json, res.redirect, res.render, res.send, res.sendFile
