@@ -14,10 +14,22 @@ module.exports = () => {
 
   // req.session에 저장된 사용자 아이디 바탕으로 DB 조회로 사용자 정보 얻어낸 후 req.user에 저장
   passport.deserializeUser((id, done) => {
-    User.findOne({ where: { id } })
+    User.findOne({
+      where: { id },
+      include: [{
+        model: User,
+        attributes: ['id', 'nick'],
+        as: 'Followers', // 팔로워 목록
+      }, {
+        model: User,
+        attributes: ['id', 'nick'],
+        as: 'Followings', // 팔로잉 목록
+      }],
+    })
       .then(user => done(null, user))
       .catch(err => done(err));
   });
+
 
   local();
   kakao();
