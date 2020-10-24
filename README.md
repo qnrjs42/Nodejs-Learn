@@ -1,9 +1,44 @@
 
+## 테스트 - 데이터베이스 모킹
+
+```
+TypeError: Cannot read property 'id' of undefined
+```
+
+```javascript
+// controllers/user
+
+const user = await User.findOne({ where: { id: req.user.id } });
+```
+
+```javascript
+// controllers/user.test
+
+jest.mock('../models/user');
+const User = require('../models/user');
+
+// 성공 테스트
+User.findOne.mockReturnValue(Promise.resolve(
+  { 
+    id: 1, name: 'zerocho', 
+    addFollowings(value) {
+    return Promise.resolve(true);
+    } 
+  }
+));
+
+// 실패 테스트
+User.findOne.mockReturnValue(Promise.resolve(null));
+
+// 에러 테스트
+User.findOne.mockReturnValue(Promise.reject(error));
+```
+
+---
+
 ## 단위 테스트
 
 함수 단위 하나하나를 단위 테스트, 유닛 테스트라고 한다.
-
-
 
 ---
 
