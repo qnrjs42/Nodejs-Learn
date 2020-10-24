@@ -2,7 +2,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 
 const { verifyToken } = require('./middlewares');
-const { Domain, User } = require('../models');
+const { Domain, User, Post } = require('../models');
 
 const router = express.Router();
 
@@ -47,6 +47,49 @@ router.post('/token', async (req, res) => {
 // 토큰 제대로 발급 됐는지 테스트 라우터
 router.get('/test', verifyToken, (req, res) => {
   res.json(req.decoded);
+});
+
+// nodebird 데이터 보내주는 라우터
+router.get('/posts/my', verifyToken, (req, res) => {
+  Post.findAll({ where: { userId: req.decoded.id } })
+    .then((posts) => {
+      res.json({
+        code: 200,
+        payload: posts,
+      });
+    })
+    .catch((err) => {
+      console.error(err);
+      return res.status(500).json({
+        code: 500,
+        message: '서버 에러',
+      });
+    });
+});
+
+// 해시태그로 검색하는 라우터
+router.get('/posts/hashtag/:title', verifyToken, async (req, res) => {
+  try {
+    const hashtag = await Hashtag.findOne({ where: { title: req.params.title } });
+
+    if(!hashtag) {
+      return res.status(404).json({
+        code: 404,
+        message: '검색 결과가 없습니다.',
+      });
+    }
+    const posts = await hashtag.getPosts();
+    return res.json({
+      code: 200,
+      payload: posts,
+    });
+  } catch(err) {
+    console.error(err);
+    return res.status(500).json({
+      code: 500,
+      message: '서버 에러',
+    });
+  }
 });
 
 module.exports = router;
