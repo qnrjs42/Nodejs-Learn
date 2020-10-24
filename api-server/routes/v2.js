@@ -1,17 +1,13 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 
-const { verifyToken, deprecated } = require('./middlewares');
-const { Domain, User, Post } = require('../models');
+const { verifyToken, apiLimiter } = require('./middlewares');
+const { Domain, User, Post, Hashtag } = require('../models');
 
 const router = express.Router();
 
-// 라우터에 공통된 미들웨어 적용할 때
-// 하지만 먼저 적용되기 때문에 순서에 따라 의미가 달라질 수 있다
-router.use(deprecated);
-
 // 토큰 발급 라우터
-router.post('/token', async (req, res) => {
+router.post('/token', apiLimiter, async (req, res) => {
   const { clientSecret } = req.body;
   try {
     const domain = await Domain.findOne({
@@ -49,12 +45,12 @@ router.post('/token', async (req, res) => {
 });
 
 // 토큰 제대로 발급 됐는지 테스트 라우터
-router.get('/test', verifyToken, (req, res) => {
+router.get('/test', verifyToken, apiLimiter, (req, res) => {
   res.json(req.decoded);
 });
 
 // nodebird 데이터 보내주는 라우터
-router.get('/posts/my', verifyToken, (req, res) => {
+router.get('/posts/my', verifyToken, apiLimiter, (req, res) => {
   Post.findAll({ where: { userId: req.decoded.id } })
     .then((posts) => {
       res.json({
@@ -72,7 +68,7 @@ router.get('/posts/my', verifyToken, (req, res) => {
 });
 
 // 해시태그로 검색하는 라우터
-router.get('/posts/hashtag/:title', verifyToken, async (req, res) => {
+router.get('/posts/hashtag/:title', verifyToken, apiLimiter, async (req, res) => {
   try {
     const hashtag = await Hashtag.findOne({ where: { title: req.params.title } });
 

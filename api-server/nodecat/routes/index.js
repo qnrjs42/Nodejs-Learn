@@ -3,7 +3,7 @@ const axios = require('axios');
 
 const router = express.Router();
 
-const URL = 'http://localhost:8002/v1'; // 토큰 발급 URL
+const URL = 'http://localhost:8002/v2'; // 토큰 발급 URL
 axios.defaults.headers.origin = 'http://localhost:4000'; // origin 헤더 추가
 
 // 토큰 자동 재발급
@@ -21,7 +21,7 @@ const request = async (req, api) => {
     return await axios.get(`${URL}${api}`, {
       headers: { authorization: req.session.jwt },
     }); // API 요청
-    
+
   } catch (error) {
     if (error.response.status === 419) { // 토큰 만료시 토큰 재발급 받기
       delete req.session.jwt;
