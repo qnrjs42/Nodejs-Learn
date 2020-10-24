@@ -9,9 +9,10 @@
   "test": {
     "username": "root",
     "password": "1234",
-    "database": "nodejsbook-nodebird",
+    "database": "nodejsbook-nodebird-test",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "logging": false
   },
   "production": {
     "username": "root",
