@@ -1,4 +1,25 @@
 
+## 테스트 - 커버리지
+
+전체 코드 중에서 테스트 되고 있는 코드의 비율
+- 테스트 되지 않는 코드의 위치도 알려줌
+- jest -coverage
+- Stmts: 구문
+- Branch: 분기점
+- Funces: 함수
+- Lines: 줄 수
+
+```
+jest --coverage
+
+package.json에 등록
+"coverage": "jest --coverage"
+```
+
+테스트 커버리지는 100%에 집착할 필요 없고 꾸준히 업데이트만 해주면 된다.
+
+---
+
 ## 테스트 - 데이터베이스 모킹
 
 ```

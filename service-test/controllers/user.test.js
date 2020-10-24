@@ -23,9 +23,7 @@ describe('addFollowing', () => {
     test(
       "사용자를 못 찾으면 res.status(404).send(no user)를 호출함",
       async () => {
-          User.findOne.mockReturnValue(
-            Promise.resolve(null)
-          );
+          User.findOne.mockReturnValue(Promise.resolve(null));
           await addFollowing(req, res, next);
           expect(res.status).toBeCalledWith(404);
           expect(res.send).toBeCalledWith("no user");
