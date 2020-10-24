@@ -1,10 +1,26 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
+const cors = require('cors');
+const url = require('url');
 
 const { verifyToken, apiLimiter } = require('./middlewares');
 const { Domain, User, Post, Hashtag } = require('../models');
 
 const router = express.Router();
+router.use(async (req, res, next) => {
+  const domain = await Domain.findOne({
+    // req.get('origin) | nodecat/routes - axios.defaults.headers.origin
+    where: { host: url.parse(req.get('origin')).host }
+  });
+  if(domain) {
+    cors({
+    origin: true,
+    credentials: true,
+  })(req, res, next);
+  } else {
+    next();
+  }
+});
 
 // 토큰 발급 라우터
 router.post('/token', apiLimiter, async (req, res) => {
