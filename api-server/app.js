@@ -5,6 +5,7 @@ const passport = require('passport');
 const morgan = require('morgan');
 const session = require('express-session');
 const nunjucks = require('nunjucks');
+const cors = require('cors');
 const dotenv = require('dotenv');
 
 dotenv.config();
@@ -47,6 +48,10 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(cors({
+  origin: ['http://localhost:4000', 'http://localhost:4001'],
+  credentials: true,
+}));
 
 app.use('/auth', authRouter);
 app.use('/', indexRouter);
