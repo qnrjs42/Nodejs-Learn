@@ -7,6 +7,7 @@ const nunjucks = require("nunjucks");
 const dotenv = require("dotenv");
 
 dotenv.config();
+const connect = require('./schemas');
 const webSocket = require("./socket");
 const indexRouter = require("./routes");
 
@@ -34,6 +35,7 @@ app.use(
     },
   })
 );
+connect(); // 몽고DB 연결
 
 app.use("/", indexRouter);
 
