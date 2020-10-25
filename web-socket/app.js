@@ -8,9 +8,9 @@ const dotenv = require("dotenv");
 const ColorHash = require("color-hash");
 
 dotenv.config();
-const connect = require('./schemas');
 const webSocket = require("./socket");
 const indexRouter = require("./routes");
+const connect = require("./schemas");
 
 const app = express();
 app.set("port", process.env.PORT || 8005);
@@ -19,12 +19,8 @@ nunjucks.configure("views", {
   express: app,
   watch: true,
 });
+connect();
 
-app.use(morgan("dev"));
-app.use(express.static(path.join(__dirname, "public")));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser(process.env.COOKIE_SECRET));
 const sessionMiddleware = session({
   resave: false,
   saveUninitialized: false,
@@ -34,8 +30,13 @@ const sessionMiddleware = session({
     secure: false,
   },
 });
+app.use(morgan("dev"));
+app.use(express.static(path.join(__dirname, "public")));
+app.use("/gif", express.static(path.join(__dirname, "uploads")));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(sessionMiddleware);
-connect(); // 몽고DB 연결
 
 app.use((req, res, next) => {
   if (!req.session.color) {
@@ -53,7 +54,6 @@ app.use((req, res, next) => {
   next(error);
 });
 
-
 app.use((err, req, res, next) => {
   res.locals.message = err.message;
   res.locals.error = process.env.NODE_ENV !== "production" ? err : {};
@@ -65,5 +65,4 @@ const server = app.listen(app.get("port"), () => {
   console.log(app.get("port"), "번 포트에서 대기중");
 });
 
-// express server 전달
 webSocket(server, app, sessionMiddleware);
