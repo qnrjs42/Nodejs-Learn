@@ -5,6 +5,7 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const nunjucks = require("nunjucks");
 const dotenv = require("dotenv");
+const ColorHash = require("color-hash");
 
 dotenv.config();
 const connect = require('./schemas');
@@ -37,6 +38,14 @@ app.use(
 );
 connect(); // 몽고DB 연결
 
+app.use((req, res, next) => {
+  if (!req.session.color) {
+    const colorHash = new ColorHash();
+    req.session.color = colorHash.hex(req.sessionID);
+  }
+  next();
+});
+
 app.use("/", indexRouter);
 
 app.use((req, res, next) => {
@@ -44,6 +53,7 @@ app.use((req, res, next) => {
   error.status = 404;
   next(error);
 });
+
 
 app.use((err, req, res, next) => {
   res.locals.message = err.message;
@@ -57,4 +67,4 @@ const server = app.listen(app.get("port"), () => {
 });
 
 // express server 전달
-webSocket(server);
+webSocket(server, app);
