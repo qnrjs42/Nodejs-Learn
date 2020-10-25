@@ -2,9 +2,11 @@ const express = require("express");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+const schedule = require("node-schedule");
 
 const { Good, Auction, User } = require("../models");
 const { isLoggedIn, isNotLoggedIn } = require("./middlewares");
+const { sequelize } = require("../models/user");
 
 const router = express.Router();
 
@@ -64,11 +66,40 @@ router.post(
   async (req, res, next) => {
     try {
       const { name, price } = req.body;
-      await Good.create({
+      const good = await Good.create({
         OwnerId: req.user.id,
         name,
         img: req.file.filename,
         price,
+      });
+      const end = new Date();
+      end.setDate(end.getDate() + 1); // 하루 뒤
+      schedule.scheduleJob(end, async () => {
+        // transaction은 DB 사용 중 에러 발생 방지로 3개 중 하나라도 에러나면 rollback
+        const t = await sequelize.transaction();
+        try {
+          const success = await Auction.findOne({
+            where: { GoodId: good.id },
+            order: [["bid", "DESC"]],
+            transaction: t,
+          });
+          await Good.update(
+            { SoldId: success.UserId },
+            { where: { id: good.id }, transaction: t }
+          );
+          await User.update(
+            {
+              money: sequelize.literal(`money - ${success.bid}`),
+            },
+            {
+              where: { id: success.UserId },
+              transaction: t,
+            }
+          );
+          await t.commit();
+        } catch (err) {
+          await t.rollback();
+        }
       });
       res.redirect("/");
     } catch (error) {
@@ -89,7 +120,7 @@ router.get("/good/:id", isLoggedIn, async (req, res, next) => {
         },
       }),
       Auction.findAll({
-        where: { GoodId: req.params.id },
+        where: { goodId: req.params.id },
         include: { model: User },
         order: [["bid", "ASC"]],
       }),
@@ -113,11 +144,11 @@ router.post("/good/:id/bid", isLoggedIn, async (req, res, next) => {
       include: { model: Auction },
       order: [[{ model: Auction }, "bid", "DESC"]],
     });
-    // 시작 가격 > 입찰가
+    // 입찰가 > 시작 가격
     if (good.price >= bid) {
       return res.status(403).send("시작 가격보다 높게 입찰해야 합니다.");
     }
-    // 경매 종료 확인
+    // 경매 종료 알림
     if (new Date(good.createdAt).valueOf() + 24 * 60 * 60 * 1000 < new Date()) {
       return res.status(403).send("경매가 이미 종료되었습니다");
     }
