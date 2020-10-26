@@ -1,4 +1,63 @@
 
+## csurf
+
+CSRF 공격 방어
+csrkToken 생성해서 프론트로 보내주고(쿠키로)
+Form 등록 시 csrfToken을 같이 받아 일치하는지 비교
+
+```
+npm i csurf
+```
+
+```javascript
+const csrf = require('csurf');
+const csrfProtection = csrf({ cookie: true });
+
+app.get('/form', csrfProtection, (req, res) => {
+  res.render('csrf', { csrfToken: req.csrfToken() });
+});
+
+app.post('/form', csrfProtection, (req, res) => {
+  res.send('ok');
+});
+```
+
+---
+
+## sanitize-html
+
+XSS 공격 방어
+```
+npm i sanitize-html
+```
+
+```javascript
+const sanitizeHtml = require('sanitize-html');
+const html = "<script>alert('hello')</script>"
+console.log(sanitizeHtml(html));
+```
+
+---
+
+## cross-env
+
+맥, 리눅스일 때 배포
+```json
+// package.json
+"start": "NODE_ENV=production PORT=80 node server"
+```
+
+윈도우에선s cross-env 필요
+```
+npm i cross-env
+```
+```json
+// package.json
+"start": "cross-env NODE_ENV=production PORT=80 node server"
+```
+
+---
+
 ## 웹 소켓
 
 웹 소켓: 실시간 양방향 데이터 전송 위한 기술
