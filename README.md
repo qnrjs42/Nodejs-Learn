@@ -1,4 +1,49 @@
 
+## winston
+
+console.log와 console.error 대체 모듈
+- 위 메소드는 휘발성
+- 로그를 파일에 기록하는 것이 좋음
+- 윈스턴 설치 후 logger.js 작성
+
+console 순서
+```
+console.log()
+console.info()
+console.warn()
+console.error()
+```
+
+```
+npm i winston
+```
+
+```javascript
+// logger.js
+
+const { createLogger, format, transports } = require('winston');
+
+const logger = createLogger({
+  level: 'info', // console.log() 제외한 나머지 console 기록
+  format: format.json(),
+  transports: [
+    new transports.File({ filename: 'combined.log' }), // 해당 파일에 info, warn, error가 기록
+    new transports.File({ filename: 'error.log', level: 'error' }), // 해당 파일에 error만 기록
+  ],
+});
+
+// 개발 모드일 때는 콘솔에 표시
+if (process.env.NODE_ENV !== 'production') {
+  logger.add(new transports.Console({ format: format.simple() }));
+}
+
+module.exports = logger;
+```
+
+'winstom-daily-rotate-file' 모듈로 날짜별로 관리 가능
+
+---
+
 ## pm2
 
 ```
