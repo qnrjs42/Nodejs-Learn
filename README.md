@@ -1,4 +1,15 @@
 
+## connect-redis
+
+멀티 프로세스간 메모리 공유를 위해 redis 사용
+- connect-redis가 익스프레스와 레디스를 연결해줌
+
+```
+npm i redis connect-redis
+```
+
+--
+
 ## winston
 
 console.log와 console.error 대체 모듈
