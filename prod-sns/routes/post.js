@@ -43,8 +43,10 @@ const upload = multer({
 
 router.post('/img', isLoggedIn, upload.single('img'), (req, res) => {
   console.log(req.file);
+  const originalUrl = req.file.location;
+  const url = originalUrl.replace(/\/original\//, '/thumb/');
   // res.json({ url: `/img/${req.file.filename}` });
-  res.json({ url: req.file.location });
+  res.json({ url, originalUrl: req.file.location });
 });
 
 const upload2 = multer();
